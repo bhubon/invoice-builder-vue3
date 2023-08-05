@@ -15,6 +15,7 @@ const data = reactive({
       description: '',
       quantity: '',
       rate: '',
+      discount: '',
       amount: ''
     }
   ],
@@ -27,11 +28,17 @@ const data = reactive({
 
 function addMoreItem() {
   data.items.push({
+    removeAble: true,
     description: '',
     quantity: '',
     rate: '',
+    discount: '',
     amount: ''
   })
+}
+
+function removeItem(index) {
+  data.items.splice(index, 1)
 }
 
 function getSubtotal() {
@@ -53,6 +60,12 @@ function saveData() {
   console.log(data)
 }
 
+function itemCalculatedAmount(item) {
+  let amount = 0;
+  amount = (item.quantity * item.rate) - ((item.quantity * item.rate) * item.discount / 100);
+  item.amount = amount;
+  return amount;
+}
 
 </script>
 
@@ -102,12 +115,23 @@ function saveData() {
     <div class="mt-20">
       <table class="table-auto w-full">
         <tr class="bg-gray-800 text-left text-white">
+          <th class=""></th>
           <th class="p-2 pl-5 w-1/2">Item</th>
           <th class="p-2">Quantity</th>
           <th class="p-2">Rate</th>
-          <th class="p-2 w-[200px] text-right pr-5">Amount</th>
+          <th class="p-2">Discount (%)</th>
+          <th class="p-2 w-[190px] text-right pr-5">Amount</th>
         </tr>
         <tr v-for="(item, index) in data.items" :key="index">
+          <td>
+            <button @click="removeItem(index)" :disabled="data.items.length > 1 ? false : 'disabled'"
+              :class="data.items.length > 1 ? 'bg-red-700' : 'bg-gray-400'" class="text-white p-1 rounded "><svg
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </td>
           <td class="py-1">
             <input class="w-full pl-5" type="text" placeholder="Description" v-model="item.description" />
           </td>
@@ -117,8 +141,11 @@ function saveData() {
           <td class="">
             <input class="w-full" type="number" placeholder="Rate" v-model="item.rate">
           </td>
+          <td class="">
+            <input class="w-full" type="number" placeholder="Dicount (%)" v-model="item.discount">
+          </td>
           <td class="py-1 pr-5 text-right text-gray-800">
-            $ {{ item.amount = item.quantity * item.rate }}
+            $ {{ itemCalculatedAmount(item) }}
           </td>
         </tr>
       </table>

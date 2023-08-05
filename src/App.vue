@@ -137,8 +137,8 @@ function saveData() {
         class="ml-2 mt-5 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         Load Invoice 2
       </button>
-      <br>
-      {{ data }}
+      <!-- <br>
+      {{ data }} -->
     </div>
     <div class="mt-[200px]">
       <div class="flex justify-between">
